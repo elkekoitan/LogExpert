@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Determine price ID based on billing cycle
-    let priceId = plan.priceId
+    let priceId: string = plan.priceId!
     if (billingCycle === 'yearly' && plan.priceId) {
       // Assuming yearly price IDs follow a pattern
       priceId = plan.priceId.replace('monthly', 'yearly')
