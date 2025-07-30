@@ -174,7 +174,8 @@ export class LogsService {
       if (error) throw error
 
       const distribution = data?.reduce((acc, log) => {
-        acc[log.level] = (acc[log.level] || 0) + 1
+        const level = log.level as LogLevel
+        acc[level] = (acc[level] || 0) + 1
         return acc
       }, {} as Record<LogLevel, number>) || {}
 
