@@ -1,5 +1,4 @@
 import { stripe, SUBSCRIPTION_PLANS, type SubscriptionPlan } from '@/lib/stripe'
-import { supabase } from '@/lib/supabase'
 
 export class StripeService {
   // Create Stripe customer
@@ -141,33 +140,11 @@ export class StripeService {
       const currentPeriodStart = subscription.current_period_start
       const currentPeriodEnd = subscription.current_period_end
 
-      // Get usage from Supabase
-      const { data: logsData, error: logsError } = await supabase
-        .from('logs')
-        .select('id')
-        .gte('created_at', new Date(currentPeriodStart * 1000).toISOString())
-        .lte('created_at', new Date(currentPeriodEnd * 1000).toISOString())
-
-      if (logsError) throw logsError
-
-      const { data: monitorsData, error: monitorsError } = await supabase
-        .from('monitors')
-        .select('id')
-
-      if (monitorsError) throw monitorsError
-
-      const { data: incidentsData, error: incidentsError } = await supabase
-        .from('incidents')
-        .select('id')
-        .gte('created_at', new Date(currentPeriodStart * 1000).toISOString())
-        .lte('created_at', new Date(currentPeriodEnd * 1000).toISOString())
-
-      if (incidentsError) throw incidentsError
-
+      // Mock usage data for demo
       const usage = {
-        logs: logsData?.length || 0,
-        monitors: monitorsData?.length || 0,
-        incidents: incidentsData?.length || 0,
+        logs: 1500,
+        monitors: 3,
+        incidents: 5,
         periodStart: new Date(currentPeriodStart * 1000),
         periodEnd: new Date(currentPeriodEnd * 1000),
       }
@@ -218,11 +195,11 @@ export class StripeService {
     const status = subscription.status
     const currentPeriodStart = new Date(subscription.current_period_start * 1000)
     const currentPeriodEnd = new Date(subscription.current_period_end * 1000)
-    
+
     // Get price ID to determine plan
     const priceId = subscription.items.data[0]?.price?.id
     let plan = 'free'
-    
+
     for (const [key, planData] of Object.entries(SUBSCRIPTION_PLANS)) {
       if (planData.priceId === priceId) {
         plan = key.toLowerCase()
@@ -230,65 +207,32 @@ export class StripeService {
       }
     }
 
-    // Update subscription in database
-    const { error } = await supabase
-      .from('subscriptions')
-      .upsert({
-        stripe_customer_id: customerId,
-        stripe_subscription_id: subscriptionId,
-        status,
-        plan,
-        current_period_start: currentPeriodStart.toISOString(),
-        current_period_end: currentPeriodEnd.toISOString(),
-      })
-
-    if (error) {
-      console.error('Update subscription in database error:', error)
-    }
+    // Log subscription change for demo
+    console.log('Subscription changed:', {
+      customerId,
+      subscriptionId,
+      status,
+      plan,
+      currentPeriodStart: currentPeriodStart.toISOString(),
+      currentPeriodEnd: currentPeriodEnd.toISOString(),
+    })
   }
 
   // Handle subscription deleted
   private static async handleSubscriptionDeleted(subscription: any) {
     const subscriptionId = subscription.id
-
-    // Update subscription status to cancelled
-    const { error } = await supabase
-      .from('subscriptions')
-      .update({ status: 'cancelled' })
-      .eq('stripe_subscription_id', subscriptionId)
-
-    if (error) {
-      console.error('Update cancelled subscription error:', error)
-    }
+    console.log('Subscription deleted:', subscriptionId)
   }
 
   // Handle payment succeeded
   private static async handlePaymentSucceeded(invoice: any) {
     const subscriptionId = invoice.subscription
-    
-    // Update subscription status to active
-    const { error } = await supabase
-      .from('subscriptions')
-      .update({ status: 'active' })
-      .eq('stripe_subscription_id', subscriptionId)
-
-    if (error) {
-      console.error('Update payment succeeded error:', error)
-    }
+    console.log('Payment succeeded for subscription:', subscriptionId)
   }
 
   // Handle payment failed
   private static async handlePaymentFailed(invoice: any) {
     const subscriptionId = invoice.subscription
-    
-    // Update subscription status to past_due
-    const { error } = await supabase
-      .from('subscriptions')
-      .update({ status: 'past_due' })
-      .eq('stripe_subscription_id', subscriptionId)
-
-    if (error) {
-      console.error('Update payment failed error:', error)
-    }
+    console.log('Payment failed for subscription:', subscriptionId)
   }
 }

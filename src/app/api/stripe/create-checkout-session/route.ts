@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createSupabaseServerClient } from '@/lib/supabase'
 import { StripeService } from '@/lib/api/stripe'
 import { SUBSCRIPTION_PLANS } from '@/lib/stripe'
 
@@ -7,29 +6,12 @@ export async function POST(request: NextRequest) {
   try {
     const { planId, billingCycle = 'monthly' } = await request.json()
 
-    // Get current user
-    const supabase = createSupabaseServerClient()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
-
-    // Get user profile
-    const { data: profile, error: profileError } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', user.id)
-      .single()
-
-    if (profileError || !profile) {
-      return NextResponse.json(
-        { error: 'User profile not found' },
-        { status: 404 }
-      )
+    // For demo purposes, we'll use placeholder data
+    const user = { id: 'demo-user-id' }
+    const profile = {
+      email: 'demo@example.com',
+      first_name: 'Demo',
+      last_name: 'User'
     }
 
     // Get plan details
@@ -41,33 +23,21 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if customer already exists
-    let customerId: string
-    const { data: existingSubscription } = await supabase
-      .from('subscriptions')
-      .select('stripe_customer_id')
-      .eq('user_id', user.id)
-      .single()
+    // Create new customer for demo
+    const { customer, error: customerError } = await StripeService.createCustomer(
+      profile.email,
+      `${profile.first_name} ${profile.last_name}`,
+      user.id
+    )
 
-    if (existingSubscription?.stripe_customer_id) {
-      customerId = existingSubscription.stripe_customer_id
-    } else {
-      // Create new customer
-      const { customer, error: customerError } = await StripeService.createCustomer(
-        profile.email,
-        `${profile.first_name} ${profile.last_name}`,
-        user.id
+    if (customerError || !customer) {
+      return NextResponse.json(
+        { error: 'Failed to create customer' },
+        { status: 500 }
       )
-
-      if (customerError || !customer) {
-        return NextResponse.json(
-          { error: 'Failed to create customer' },
-          { status: 500 }
-        )
-      }
-
-      customerId = customer.id
     }
+
+    const customerId = customer.id
 
     // Determine price ID based on billing cycle
     let priceId: string = plan.priceId!
