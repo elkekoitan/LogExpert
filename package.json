@@ -32,7 +32,14 @@
     "zustand": "^4.5.4",
     "react-hot-toast": "^2.4.1",
     "class-variance-authority": "^0.7.0",
-    "tailwind-merge": "^2.3.0"
+    "tailwind-merge": "^2.3.0",
+    "@supabase/supabase-js": "^2.39.0",
+    "@supabase/ssr": "^0.1.0",
+    "stripe": "^14.15.0",
+    "next-auth": "^4.24.5",
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3",
+    "nodemailer": "^6.9.8"
   },
   "devDependencies": {
     "eslint": "^8.57.0",
@@ -40,6 +47,9 @@
     "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.13",
     "prettier": "^3.3.2",
-    "prettier-plugin-tailwindcss": "^0.6.5"
+    "prettier-plugin-tailwindcss": "^0.6.5",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/nodemailer": "^6.4.14"
   }
 }

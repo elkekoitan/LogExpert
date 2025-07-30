@@ -1,10 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    appDir: true,
+    serverComponentsExternalPackages: ['@supabase/supabase-js'],
   },
   images: {
-    domains: ['localhost'],
+    domains: ['localhost', 'images.unsplash.com', 'avatars.githubusercontent.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+        port: '',
+        pathname: '/storage/v1/object/public/**',
+      },
+    ],
   },
   typescript: {
     ignoreBuildErrors: false,
@@ -12,6 +20,22 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: false,
   },
+  async headers() {
+    return [
+      {
+        source: '/api/:path*',
+        headers: [
+          { key: 'Access-Control-Allow-Credentials', value: 'true' },
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Access-Control-Allow-Methods', value: 'GET,OPTIONS,PATCH,DELETE,POST,PUT' },
+          { key: 'Access-Control-Allow-Headers', value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization' },
+        ],
+      },
+    ]
+  },
+  poweredByHeader: false,
+  compress: true,
+  generateEtags: true,
 }
 
 module.exports = nextConfig
