@@ -148,7 +148,7 @@ export class LogsService {
 
       if (error) throw error
 
-      const uniqueSources = [...new Set(data?.map(item => item.source) || [])]
+      const uniqueSources = Array.from(new Set(data?.map(item => item.source) || []))
       return { sources: uniqueSources, error: null }
     } catch (error) {
       console.error('Get log sources error:', error)
