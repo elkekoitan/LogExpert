@@ -262,9 +262,11 @@ export default function PricingPage() {
             <Button size="lg" onClick={() => handleSubscribe('starter')}>
               Start Free Trial
             </Button>
-            <Button variant="outline" size="lg" asChild>
-              <Link href="/demo">View Demo</Link>
-            </Button>
+            <Link href="/demo">
+              <Button variant="outline" size="lg">
+                View Demo
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
