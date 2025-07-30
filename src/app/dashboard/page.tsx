@@ -209,7 +209,7 @@ export default function DashboardPage() {
                   <div key={log.id} className="space-y-1">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <Badge variant={log.level} size="sm">
+                        <Badge variant={log.level === 'warn' ? 'warning' : log.level as any} size="sm">
                           {log.level.toUpperCase()}
                         </Badge>
                         <span className="text-xs text-gray-500 dark:text-text-muted">
