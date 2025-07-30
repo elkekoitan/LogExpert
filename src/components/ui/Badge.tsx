@@ -40,9 +40,6 @@ const badgeVariants = cva(
         // Log level variants
         trace: 'border-transparent bg-gray-400 text-white',
         debug: 'border-transparent bg-gray-500 text-white',
-        info: 'border-transparent bg-status-info text-white',
-        warn: 'border-transparent bg-status-warning text-white',
-        error: 'border-transparent bg-status-error text-white',
         fatal: 'border-transparent bg-red-800 text-white',
       },
       size: {
