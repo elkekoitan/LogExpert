@@ -1,0 +1,237 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* CSS Custom Properties for LogExpert */
+:root {
+  /* Colors */
+  --color-primary: 106 90 249; /* #6A5AF9 */
+  --color-primary-hover: 139 126 255; /* #8B7EFF */
+  
+  /* Background Colors */
+  --color-bg-primary: 30 33 57; /* #1E2139 */
+  --color-bg-secondary: 45 49 85; /* #2D3155 */
+  --color-bg-tertiary: 18 20 32; /* #121420 */
+  
+  /* Text Colors */
+  --color-text-primary: 255 255 255; /* #FFFFFF */
+  --color-text-secondary: 160 163 189; /* #A0A3BD */
+  --color-text-muted: 107 114 128; /* #6B7280 */
+  
+  /* Status Colors */
+  --color-success: 0 196 140; /* #00C48C */
+  --color-error: 255 77 77; /* #FF4D4D */
+  --color-warning: 245 158 11; /* #F59E0B */
+  --color-info: 59 130 246; /* #3B82F6 */
+  
+  /* Incident Status Colors */
+  --color-status-triggered: 239 68 68; /* #EF4444 */
+  --color-status-acknowledged: 245 158 11; /* #F59E0B */
+  --color-status-resolved: 16 185 129; /* #10B981 */
+  
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+/* Light mode overrides */
+.light {
+  --color-bg-primary: 255 255 255; /* #FFFFFF */
+  --color-bg-secondary: 248 250 252; /* #F8FAFC */
+  --color-bg-tertiary: 241 245 249; /* #F1F5F9 */
+  
+  --color-text-primary: 31 41 55; /* #1F2937 */
+  --color-text-secondary: 107 114 128; /* #6B7280 */
+  --color-text-muted: 156 163 175; /* #9CA3AF */
+}
+
+/* Base styles */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  background-color: rgb(var(--color-bg-primary));
+  color: rgb(var(--color-text-primary));
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--color-bg-secondary));
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--color-text-muted));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--color-text-secondary));
+}
+
+/* Focus styles */
+*:focus {
+  outline: 2px solid rgb(var(--color-primary));
+  outline-offset: 2px;
+}
+
+/* Selection styles */
+::selection {
+  background-color: rgb(var(--color-primary) / 0.2);
+  color: rgb(var(--color-text-primary));
+}
+
+/* Utility classes */
+.text-gradient {
+  background: linear-gradient(135deg, rgb(var(--color-primary)), rgb(var(--color-primary-hover)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-hover {
+  transition: all 0.2s ease-in-out;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Animation classes */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Loading spinner */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgb(var(--color-text-muted));
+  border-top: 2px solid rgb(var(--color-primary));
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Status indicator */
+.status-indicator {
+  position: relative;
+}
+
+.status-indicator::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.status-indicator.status-triggered::before {
+  background-color: rgb(var(--color-status-triggered) / 0.3);
+}
+
+.status-indicator.status-acknowledged::before {
+  background-color: rgb(var(--color-status-acknowledged) / 0.3);
+}
+
+.status-indicator.status-resolved::before {
+  background-color: rgb(var(--color-status-resolved) / 0.3);
+}
+
+/* Custom form styles */
+.form-input {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500;
+}
+
+.dark .form-input {
+  @apply bg-background-secondary border-gray-600 text-text-primary placeholder-text-muted;
+}
+
+/* Table styles */
+.table-row {
+  @apply border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150;
+}
+
+.dark .table-row {
+  @apply border-gray-700 hover:bg-background-secondary;
+}
+
+/* Button focus styles */
+.btn-focus {
+  @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500;
+}
+
+.dark .btn-focus {
+  @apply focus:ring-offset-background-primary;
+}
