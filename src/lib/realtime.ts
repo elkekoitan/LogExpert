@@ -207,13 +207,13 @@ export function useRealtimeLogs(
 
   React.useEffect(() => {
     setIsConnected(true)
-    
+
     const subscription = RealtimeService.subscribeToLogs(
       (payload) => {
         if (payload.eventType === 'INSERT') {
           setLogs(prev => [payload.new, ...prev.slice(0, 999)]) // Keep last 1000 logs
         } else if (payload.eventType === 'UPDATE') {
-          setLogs(prev => prev.map(log => 
+          setLogs(prev => prev.map(log =>
             log.id === payload.new.id ? payload.new : log
           ))
         } else if (payload.eventType === 'DELETE') {
@@ -227,7 +227,7 @@ export function useRealtimeLogs(
       RealtimeService.unsubscribe(subscription)
       setIsConnected(false)
     }
-  }, [filters?.source, filters?.level])
+  }, [filters])
 
   return { logs, isConnected }
 }
@@ -273,7 +273,7 @@ export function usePresence(
 
   React.useEffect(() => {
     setIsConnected(true)
-    
+
     const subscription = RealtimeService.subscribeToPresence(
       roomId,
       userInfo,
@@ -284,7 +284,7 @@ export function usePresence(
       RealtimeService.unsubscribe(subscription)
       setIsConnected(false)
     }
-  }, [roomId, userInfo.id])
+  }, [roomId, userInfo])
 
   return { presences, isConnected }
 }
