@@ -24,7 +24,7 @@ export class RealtimeService {
         },
         (payload) => {
           // Apply client-side filtering if needed
-          if (filters?.level && payload.new?.level !== filters.level) {
+          if (filters?.level && (payload.new as any)?.level !== filters.level) {
             return
           }
           
