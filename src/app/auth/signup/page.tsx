@@ -12,23 +12,65 @@ export default function SignupPage() {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
     password: '',
+    companyName: '',
+    role: 'other',
     agreeToTerms: false,
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    // Redirect to onboarding
-    router.push('/auth/onboarding')
+    setError('')
+    setSuccess('')
+
+    try {
+      if (!formData.agreeToTerms) {
+        throw new Error('Please agree to the terms and conditions')
+      }
+
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          companyName: formData.companyName,
+          role: formData.role,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Signup failed')
+      }
+
+      setSuccess(data.message)
+
+      // If user is immediately confirmed, redirect to dashboard
+      if (data.session) {
+        localStorage.setItem('user', JSON.stringify(data.user))
+        setTimeout(() => router.push('/dashboard'), 2000)
+      } else {
+        // Otherwise show success message and redirect to login
+        setTimeout(() => router.push('/auth/login'), 3000)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Signup failed')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
